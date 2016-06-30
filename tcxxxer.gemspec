@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Tcxxxer::VERSION
   spec.authors       = ["xiang zhuyuan"]
   spec.email         = ["xiangzhuyuan@gmail.com"]
-
+  spec.licenses      = ['MIT']
   spec.summary       = %q{copy from rubist/guppy}
   spec.description   = %q{A converter for TCX/GPX file, you get can all `lap`, `track` info from the `tcx` file!}
   spec.homepage      = "https://github.com/xiangzhuyuan/tcxxxer"
