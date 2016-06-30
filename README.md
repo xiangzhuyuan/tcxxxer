@@ -2,9 +2,9 @@
 
 [![Gem Version](https://badge.fury.io/rb/tcxxxer.svg)](https://badge.fury.io/rb/tcxxxer)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tcxxxer`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+I search a lot but I couldn't find out a valid gem which I can use to parse/conert a `tcx` file easily.
+so I wrote this, essentially I check the gem `guppy` but I found it outdated a long age, the logic to parse
+`tcx` file had been outdated. please check this gem if you want to work with `tcx` file.
 
 ## Installation
 
@@ -24,18 +24,50 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+get '/map' do
+  # input parameter
+  # name
+  day = params['day']
+  file_name = "TourDeHokkaido_day#{day}"
+  db           = Tcxxxer::DB.open("./tcx/#{file_name}.tcx")
+  @points_list = []
+  db.courses.each do |course|
+    max_distance = (course.track.last.distance/1000).round(2).to_s + "km"
+    course_range = course.track.each_slice(400).to_a
 
-## Development
+    course_range.each_with_index do |range, _i|
+      @points    = []
+      @altitudes = []
+      range.each do |point|
+        @points << (point.distance/1000).round(2).to_s + "km"
+        @altitudes << point.altitude.round(2)
+        # @points_list << {:points => @points, :altitudes => @altitudes}
+      end
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
+      begin
+          # read all, get each id
+          html_file = "./tcx_result/#{file_name}_#{_i}.html"
+          puts "start read erb, and create html file ...."
+          renderer = ERB.new(File.read("./views/line.erb"))
+          result   = renderer.result(binding)
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+          File.open(html_file, 'w') do |f|
+            puts "write #{html_file} start"
+            f.write(result)
+          end
 
-## Contributing
+        rescue => e
+          puts e.message
+        end
 
-1. Fork it ( https://github.com/[my-github-username]/tcxxxer/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+    end
+  end
+  # get file list
+  @result_list = Dir["./tcx_result/#{file_name}*.html"]
+  erb :line_result
+end
+
+```
+
+more please check [my strava 次世代の名刺](https://mystrava.herokuapp.com)
