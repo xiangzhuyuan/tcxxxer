@@ -1,3 +1,3 @@
 module Tcxxxer
-  VERSION = "0.4.0"
+  VERSION = "1.1.0"
 end
