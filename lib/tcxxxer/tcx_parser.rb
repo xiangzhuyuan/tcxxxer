@@ -29,7 +29,7 @@ module Tcxxxer
     private
     def build_course(course_node)
       course       = Course.new
-      course.name  = course_node.xpath('//Name').inner_text.to_s
+      course.name  = course_node.xpath('//Name').first.inner_text.to_s
       course.lap   = build_lap(course_node.xpath('//Lap'))
       course.track = build_track_point(course_node.xpath('//Track'))
 
