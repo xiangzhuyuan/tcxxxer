@@ -24,4 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.9"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "nokogiri", "1.6.8"
+  spec.description = <<DESC
+  tcx file parser and converter
+DESC
 end
